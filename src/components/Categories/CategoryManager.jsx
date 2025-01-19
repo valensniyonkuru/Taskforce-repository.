@@ -4,10 +4,11 @@ import { categoryApi } from '../../api/api';
 const CategoryManager = () => {
   const [categories, setCategories] = useState([]);
   const [rootCategories, setRootCategories] = useState([]);
-  const [newCategory, setNewCategory] = useState({
+  const [categoryForm, setCategoryForm] = useState({
     name: '',
     parentCategory: null,
   });
+  const [editingCategory, setEditingCategory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -36,16 +37,24 @@ const CategoryManager = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === 'parentCategory') {
-      setNewCategory({
-        ...newCategory,
+      setCategoryForm({
+        ...categoryForm,
         parentCategory: value ? { id: parseInt(value) } : null
       });
     } else {
-      setNewCategory({
-        ...newCategory,
+      setCategoryForm({
+        ...categoryForm,
         [name]: value
       });
     }
+  };
+
+  const resetForm = () => {
+    setCategoryForm({
+      name: '',
+      parentCategory: null
+    });
+    setEditingCategory(null);
   };
 
   const handleSubmit = async (e) => {
@@ -53,17 +62,27 @@ const CategoryManager = () => {
     setError(null);
     setSuccess(null);
     try {
-      await categoryApi.createCategory(newCategory);
+      if (editingCategory) {
+        await categoryApi.updateCategory(editingCategory.id, categoryForm);
+        setSuccess('Category updated successfully!');
+      } else {
+        await categoryApi.createCategory(categoryForm);
+        setSuccess('Category created successfully!');
+      }
       await fetchCategories();
-      setNewCategory({
-        name: '',
-        parentCategory: null
-      });
-      setSuccess('Category created successfully!');
+      resetForm();
     } catch (error) {
-      console.error('Error creating category:', error);
-      setError(error.message || 'Failed to create category. Please try again.');
+      console.error('Error saving category:', error);
+      setError(error.message || 'Failed to save category. Please try again.');
     }
+  };
+
+  const handleEdit = (category) => {
+    setEditingCategory(category);
+    setCategoryForm({
+      name: category.name,
+      parentCategory: category.parentCategory
+    });
   };
 
   const handleDelete = async (id) => {
@@ -82,6 +101,10 @@ const CategoryManager = () => {
     }
   };
 
+  const handleCancel = () => {
+    resetForm();
+  };
+
   const renderCategoryTree = (categories) => {
     if (!categories || categories.length === 0) return null;
 
@@ -91,12 +114,20 @@ const CategoryManager = () => {
           <li key={category.id} className="mb-2">
             <div className="flex items-center justify-between bg-white p-2 rounded-lg shadow-sm">
               <span className="font-medium">{category.name}</span>
-              <button
-                onClick={() => handleDelete(category.id)}
-                className="text-red-600 hover:text-red-800 text-sm"
-              >
-                Delete
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleEdit(category)}
+                  className="text-blue-600 hover:text-blue-800 text-sm"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(category.id)}
+                  className="text-red-600 hover:text-red-800 text-sm"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
             {renderCategoryTree(category.subCategories)}
           </li>
@@ -128,7 +159,7 @@ const CategoryManager = () => {
             <input
               type="text"
               name="name"
-              value={newCategory.name}
+              value={categoryForm.name}
               onChange={handleInputChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               required
@@ -138,25 +169,36 @@ const CategoryManager = () => {
             <label className="block text-sm font-medium text-gray-700">Parent Category (Optional)</label>
             <select
               name="parentCategory"
-              value={newCategory.parentCategory ? newCategory.parentCategory.id : ''}
+              value={categoryForm.parentCategory ? categoryForm.parentCategory.id : ''}
               onChange={handleInputChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             >
               <option value="">None</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
+              {categories
+                .filter(cat => !editingCategory || cat.id !== editingCategory.id)
+                .map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
               ))}
             </select>
           </div>
         </div>
-        <div className="mt-4 flex justify-end">
+        <div className="mt-4 flex justify-end gap-2">
+          {editingCategory && (
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            >
+              Cancel
+            </button>
+          )}
           <button
             type="submit"
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            Add Category
+            {editingCategory ? 'Update Category' : 'Add Category'}
           </button>
         </div>
       </form>

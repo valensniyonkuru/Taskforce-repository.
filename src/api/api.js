@@ -66,12 +66,15 @@ api.interceptors.response.use(
 // Transaction API calls
 export const transactionApi = {
   getAllTransactions: () => api.get('/transactions'),
+  getTransactionById: (id) => api.get(`/transactions/${id}`),
   getTransactionsByType: (type) => api.get(`/transactions/type/${type}`),
+  getTransactionsByCategory: (categoryId) => api.get(`/transactions/category/${categoryId}`),
   getTransactionsByDateRange: (startDate, endDate) => 
     api.get('/transactions/date-range', { 
       params: { startDate, endDate }
     }),
   createTransaction: (transaction) => api.post('/transactions', transaction),
+  updateTransaction: (id, transaction) => api.put(`/transactions/${id}`, transaction),
   deleteTransaction: (id) => api.delete(`/transactions/${id}`),
 };
 
@@ -83,14 +86,18 @@ export const categoryApi = {
   getCategoryByName: (name) => api.get(`/categories/name/${name}`),
   getCategoryById: (id) => api.get(`/categories/${id}`),
   createCategory: (category) => api.post('/categories', category),
+  updateCategory: (id, category) => api.put(`/categories/${id}`, category),
   deleteCategory: (id) => api.delete(`/categories/${id}`),
 };
 
 // Budget API calls
 export const budgetApi = {
   getAllBudgets: () => api.get('/budgets'),
-  getBudgetsExceedingLimit: () => api.get('/budgets/exceeding-limit'),
+  getActiveBudgets: () => api.get('/budgets/active'),
+  getBudgetById: (id) => api.get(`/budgets/${id}`),
+  getBudgetsExceedingLimit: () => api.get('/budgets/exceeding'),
   createBudget: (budget) => api.post('/budgets', budget),
   updateBudget: (id, budget) => api.put(`/budgets/${id}`, budget),
   deleteBudget: (id) => api.delete(`/budgets/${id}`),
+  updateBudgetSpending: (id) => api.post(`/budgets/${id}/update-spending`),
 };
