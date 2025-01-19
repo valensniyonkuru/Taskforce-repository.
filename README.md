@@ -2,4 +2,5 @@
 
 Logical Data Model Design Document
 ----------------------------------
-![png1 drawio](https://github.com/user-attachments/assets/c3f03a35-1f8f-46dd-bd8c-84776932b74c)
+
+![png3 drawio](https://github.com/user-attachments/assets/4f6838a5-9cfd-45ab-a499-d49381df58c2)
