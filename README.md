@@ -8,7 +8,7 @@ Key Features:
 
 Transaction Tracking: Monitor all income and expenses across multiple accounts.
 Budget Management: Set spending limits and receive notifications when exceeded.
-----------------
+
 Reports: Generate financial summaries for custom time periods.
 -------
 Categories: Add categories and subcategories for better organization.
