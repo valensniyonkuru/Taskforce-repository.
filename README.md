@@ -42,10 +42,10 @@ This project simplifies personal finance management, empowering users to take co
 <img width="960" alt="2" src="https://github.com/user-attachments/assets/b7fd63c2-3d2a-437e-93fb-40c50b442000" />
 
 ### Limitations
-** Category Functionality: While the categorization feature is available, it is not yet fully functional or stable.
-** Partial Implementation: Other features, such as budget notifications and reporting, are approximately 90% complete and may require further development and testing.
-** Data Validation: Limited error handling and validation for user input may lead to inconsistencies in the data.
-** Mobile Optimization: The application’s UI may not yet be fully optimized for mobile devices.
+### Category Functionality: While the categorization feature is available, it is not yet fully functional or stable.
+### Partial Implementation: Other features, such as budget notifications and reporting, are approximately 90% complete and may require further development and testing.
+### Data Validation: Limited error handling and validation for user input may lead to inconsistencies in the data.
+### Mobile Optimization: The application’s UI may not yet be fully optimized for mobile devices.
 No Multi-User Support: Currently, the app is designed for single-user use and lacks role-based access or multi-user functionality.
 
 
